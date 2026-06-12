@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Шепіт Ктулху (API)</title>
+    <link rel="stylesheet" href="qtmlstyle.css">
+    <style>
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .api-btn {
+            background-color: #4ed99c;
+            color: #0d131a;
+            border: none;
+            padding: 1rem 2rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(78, 217, 156, 0.3);
+            transition: all 0.3s ease;
+        }
+        .api-btn:hover {
+            background-color: #3ec289;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78, 217, 156, 0.5);
+        }
+        .api-btn:active {
+            transform: translateY(0);
+        }
+        
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(36, 51, 70, 0.5);
+            border-top: 4px solid #4ed99c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .prophecy-card {
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .prophecy-id {
+            font-size: 0.9rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .prophecy-text {
+            font-style: italic;
+            font-size: 1.3rem;
+            color: #e2e8f0;
+            line-height: 1.8;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .visible-block {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Поклик Ктулху</h1>
+    <nav>
+        <a href="index.html">Головна</a>
+        <a href="author.html">Автор</a>
+        <a href="plot.html">Сюжет</a>
+        <a href="characters.html">Персонажі</a>
+        <a href="api.html" style="color: #4ed99c; border-bottom: 2px solid #4ed99c;">Шепіт Богів</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Почути пророцтво Стародавніх</h2>
+        <p style="margin-bottom: 1.5rem; text-align: center;">Натисніть на кнопку нижче, щоб встановити ментальний зв'язок з безоднею та отримати випадкову мудрість через API.</p>
+        
+        <div class="btn-container">
+            <button id="get-data-btn" class="api-btn">Покликати</button>
+        </div>
+
+        <div id="loading-spinner" class="spinner"></div>
+        <div id="error-box" class="error-message"></div>
+        <div id="response-output"></div>
+    </div>
+</div>
+
+<footer>Поклик Ктулху</footer>
+
+<script>
+    const actionBtn = document.getElementById('get-data-btn');
+    const spinner = document.getElementById('loading-spinner');
+    const errorDisplay = document.getElementById('error-box');
+    const contentDisplay = document.getElementById('response-output');
+
+    async function getProphecy() {
+        const apiEndpoint = 'https://api.adviceslip.com/advice';
+
+        errorDisplay.classList.remove('visible-block');
+        contentDisplay.innerHTML = '';
+        spinner.classList.add('visible-block');
+
+        try {
+            const connection = await fetch(apiEndpoint);
+
+            if (!connection.ok) {
+                throw new Error('Зв\'язок із безоднею перервано (Помилка сервера)');
+            }
+
+            const payload = await connection.json();
+            buildProphecyUI(payload.slip);
+
+        } catch (exception) {
+            renderError(exception.message);
+        } finally {
+            spinner.classList.remove('visible-block');
+        }
+    }
+
+    function buildProphecyUI(slipData) {
+        const cardWrapper = document.createElement('div');
+        cardWrapper.className = 'prophecy-card';
+
+        const subTitle = document.createElement('div');
+        subTitle.className = 'prophecy-id';
+        subTitle.textContent = `Таємне одкровення №${slipData.id}`;
+
+        const quote = document.createElement('p');
+        quote.className = 'prophecy-text';
+        quote.textContent = `«${slipData.advice}»`;
+
+        cardWrapper.append(subTitle, quote);
+        contentDisplay.append(cardWrapper);
+    }
+
+    function renderError(text) {
+        errorDisplay.textContent = `Не вдалося почути богів: ${text}`;
+        errorDisplay.classList.add('visible-block');
+    }
+
+    actionBtn.addEventListener('click', getProphecy);
+</script>
+
+</body>
+</html>
