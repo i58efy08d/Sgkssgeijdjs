@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Шепіт Ктулху (API)</title>
+    <title>Шум нічного моря (API)</title>
     <link rel="stylesheet" href="qtmlstyle.css">
     <style>
         .btn-container {
@@ -103,7 +103,7 @@
 
 <div class="container">
     <div class="card">
-        <h2>Почути пророцтво Стародавніх</h2>
+        <h2>Дізнатися таємницю</h2>
         <p style="margin-bottom: 1.5rem; text-align: center;">Натисніть на кнопку нижче, щоб встановити ментальний зв'язок з безоднею та отримати випадкову мудрість через API.</p>
         
         <div class="btn-container">
@@ -135,7 +135,7 @@
             const connection = await fetch(apiEndpoint);
 
             if (!connection.ok) {
-                throw new Error('Зв\'язок із безоднею перервано (Помилка сервера)');
+                throw new Error('Помилка сервера');
             }
 
             const payload = await connection.json();
@@ -154,7 +154,7 @@
 
         const subTitle = document.createElement('div');
         subTitle.className = 'prophecy-id';
-        subTitle.textContent = `Таємне одкровення №${slipData.id}`;
+        subTitle.textContent = `Туман над морем №${slipData.id}`;
 
         const quote = document.createElement('p');
         quote.className = 'prophecy-text';
@@ -165,7 +165,7 @@
     }
 
     function renderError(text) {
-        errorDisplay.textContent = `Не вдалося почути богів: ${text}`;
+        errorDisplay.textContent = `Не вдалося: ${text}`;
         errorDisplay.classList.add('visible-block');
     }
 
