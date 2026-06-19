@@ -173,6 +173,23 @@
     console.log('Було_Натиснуто:', event.target);
     getProphecy();
 });
+
+    contentDisplay.addEventListener('click', function(event) {
+
+    if (event.target.classList.contains('prophecy-text')) {
+
+        alert('Ви натиснули!');
+
+    }
+
+});
+    const testLink = document.getElementById('test-link');
+
+testLink.addEventListener('click', function(event) {
+    event.preventDefault();
+
+    alert('preventDefault запрацював');
+});
 </script>
 
 </body>
