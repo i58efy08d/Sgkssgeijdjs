@@ -34,8 +34,9 @@
             box-shadow: 0 6px 20px rgba(78, 217, 156, 0.5);
         }
 
-        .api-btn:active {
-            transform: translateY(0);
+        .api-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .spinner {
@@ -124,9 +125,13 @@
             Натисніть на кнопку нижче, щоб встановити ментальний зв'язок з безоднею та отримати випадкову мудрість через API.
         </p>
 
-        <div class="btn-container">
-            <button id="get-data-btn" class="api-btn">Покликати</button>
-        </div>
+        <form id="prophecy-form">
+            <div class="btn-container">
+                <button type="submit" id="get-data-btn" class="api-btn">
+                    Покликати
+                </button>
+            </div>
+        </form>
 
         <p style="text-align:center; margin-bottom:15px;">
             <a href="#" id="test-link">
@@ -146,6 +151,7 @@
 <footer>Поклик Ктулху</footer>
 
 <script>
+    const prophecyForm = document.getElementById('prophecy-form');
     const actionBtn = document.getElementById('get-data-btn');
     const spinner = document.getElementById('loading-spinner');
     const errorDisplay = document.getElementById('error-box');
@@ -163,10 +169,16 @@
             const connection = await fetch(apiEndpoint);
 
             if (!connection.ok) {
-                throw new Error('Помилка сервера');
+                throw new Error('Не вдалося завантажити дані.');
             }
 
             const payload = await connection.json();
+
+            if (!payload.slip) {
+                renderEmpty();
+                return;
+            }
+
             buildProphecyUI(payload.slip);
 
         } catch (exception) {
@@ -193,13 +205,23 @@
     }
 
     function renderError(text) {
-        errorDisplay.textContent = `Не вдалося: ${text}`;
+        errorDisplay.textContent = text;
         errorDisplay.classList.add('visible-block');
     }
 
-    actionBtn.addEventListener('click', function(event) {
-        console.log('Було натиснуто:', event.target);
-        getProphecy();
+    function renderEmpty() {
+        contentDisplay.innerHTML =
+            '<p style="text-align:center;">Нічого не знайдено.</p>';
+    }
+
+    prophecyForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        actionBtn.disabled = true;
+
+        getProphecy().finally(() => {
+            actionBtn.disabled = false;
+        });
     });
 
     contentDisplay.addEventListener('click', function(event) {
