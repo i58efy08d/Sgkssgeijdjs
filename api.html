@@ -169,7 +169,10 @@
         errorDisplay.classList.add('visible-block');
     }
 
-    actionBtn.addEventListener('click', getProphecy);
+    actionBtn.addEventListener('click', function(event) {
+    console.log('Було_Натиснуто:', event.target);
+    getProphecy();
+});
 </script>
 
 </body>
