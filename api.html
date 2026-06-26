@@ -168,37 +168,45 @@
     const contentDisplay = document.getElementById('response-output');
     const testLink = document.getElementById('test-link');
 
-    async function getProphecy() {
-        const apiEndpoint = 'https://api.adviceslip.com/advice';
+    async function getProphecy(searchWord) {
+
+        const apiEndpoint =
+            `https://api.adviceslip.com/advice/search/${searchWord}`;
 
         errorDisplay.classList.remove('visible-block');
         contentDisplay.innerHTML = '';
         spinner.classList.add('visible-block');
 
         try {
+
             const connection = await fetch(apiEndpoint);
 
             if (!connection.ok) {
-                throw new Error('Не вдалося завантажити дані.');
+                throw new Error('Не вдалося завантажити, спробуйте пізніше');
             }
 
             const payload = await connection.json();
 
-            if (!payload.slip) {
+            if (!payload.slips || payload.slips.length === 0) {
                 renderEmpty();
                 return;
             }
 
-            buildProphecyUI(payload.slip);
+            buildProphecyUI(payload.slips[0]);
 
         } catch (exception) {
-            renderError(exception.message);
+
+            renderError('Не вдалося завантажити, спробуйте пізніше');
+
         } finally {
+
             spinner.classList.remove('visible-block');
+
         }
     }
 
     function buildProphecyUI(slipData) {
+
         const cardWrapper = document.createElement('div');
         cardWrapper.className = 'prophecy-card';
 
@@ -215,34 +223,52 @@
     }
 
     function renderError(text) {
+
         errorDisplay.textContent = text;
         errorDisplay.classList.add('visible-block');
+
     }
 
     function renderEmpty() {
+
         contentDisplay.innerHTML =
-            '<p style="text-align:center;">Нічого не знайдено.</p>';
+            '<p style="text-align:center;">Нічого не знайдено, спробуйте інший запит.</p>';
+
     }
 
     prophecyForm.addEventListener('submit', function(event) {
+
         event.preventDefault();
+
+        const searchWord =
+            document.getElementById('query').value;
 
         actionBtn.disabled = true;
 
-        getProphecy().finally(() => {
+        getProphecy(searchWord).finally(() => {
+
             actionBtn.disabled = false;
+
         });
+
     });
 
     contentDisplay.addEventListener('click', function(event) {
+
         if (event.target.classList.contains('prophecy-text')) {
+
             alert('Ви натиснули!');
+
         }
+
     });
 
     testLink.addEventListener('click', function(event) {
+
         event.preventDefault();
-        alert('preventDefault запрацював');
+
+        alert('preventDefault працює');
+
     });
 </script>
 
