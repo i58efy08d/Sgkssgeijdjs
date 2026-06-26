@@ -14,4 +14,20 @@ if (saved) {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     await handleSubmit(output);
+    const videoBtn = document.getElementById('videoBtn');
+const videoOverlay = document.getElementById('videoOverlay');
+const closeVideo = document.getElementById('closeVideo');
+const secretVideo = document.getElementById('secretVideo');
+
+if (videoBtn && videoOverlay && closeVideo && secretVideo) {
+    videoBtn.addEventListener('click', () => {
+        videoOverlay.style.display = 'flex';
+    });
+
+    closeVideo.addEventListener('click', () => {
+        videoOverlay.style.display = 'none';
+        secretVideo.pause();
+        secretVideo.currentTime = 0;
+    });
+}
 });
