@@ -1,7 +1,11 @@
-export function saveAdvice(advice) {
-    localStorage.setItem('lastAdvice', JSON.stringify(advice));
-}
+import { getProphecy } from '../api/api.js';
+import { renderAdvice } from '../ui/ui.js';
+import { saveAdvice } from '../storage/storage.js';
 
-export function getSavedAdvice() {
-    return JSON.parse(localStorage.getItem('lastAdvice'));
+export async function handleSubmit(container) {
+    const advice = await getProphecy();
+
+    renderAdvice(advice, container);
+
+    saveAdvice(advice);
 }
