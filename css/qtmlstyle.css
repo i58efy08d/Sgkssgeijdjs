@@ -179,5 +179,45 @@ footer {
 
     nav a {
         font-size: 1.1rem;
+        .video-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: #4ed99c;
+    color: black;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.video-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-overlay video {
+    width: 90%;
+    max-height: 90%;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+}
     }
 }
